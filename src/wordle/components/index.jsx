@@ -88,7 +88,7 @@ const WordleContainer = () => {
       addWord(word.toLowerCase())
       setCurrentWord('')
     }
-  }, [currentWord, addWord])
+  }, [currentWord])
 
   const handleWordInput = useCallback((event) => {
     event.preventDefault();
@@ -109,7 +109,7 @@ const WordleContainer = () => {
       wordleSolver.update(matched, unMatched, charMatched)
     })
     wordleSolver.complete()
-  }, [wordStates, wordleSolver])
+  }, [wordStates])
 
   return (
     <Container style={{ maxWidth: '800px' }}>
