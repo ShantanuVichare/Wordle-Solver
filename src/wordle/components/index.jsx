@@ -46,7 +46,20 @@ const WordsSuggestionList = ({ isVisible, onHide, wordList, onWordSelect }) => {
   console.debug('WordsSuggestionList rendered')
 
   const [filterQuery, setFilterQuery] = useState('')
-  wordList = wordList.filter(word => word.includes(filterQuery.toLowerCase()))
+  wordList = wordList.filter(word => {
+    const lowerWord = word.toLowerCase();
+    const query = filterQuery.toLowerCase();
+    if (query.includes(" ")) {
+      // Replace each space with a regex that matches exactly one alphabet character.
+      const pattern = query
+        .split('')
+        .map(ch => ch === ' ' ? '[a-z]' : ch)
+        .join('');
+      const regex = new RegExp(pattern);
+      return regex.test(lowerWord);
+    }
+    return lowerWord.includes(query);
+  })
 
   const getWordClickHandler = (word) => () => {
     onWordSelect(word)
@@ -66,7 +79,7 @@ const WordsSuggestionList = ({ isVisible, onHide, wordList, onWordSelect }) => {
         <Form.Control type="text" size="md" value={filterQuery} onChange={(e) => {
           e.preventDefault()
           setFilterQuery(e.target.value)
-        }} placeholder="Filter suggestions" />
+        }} placeholder="Filter list (add <space> for wildcard character match)" />
       </Modal.Footer>
     </Modal>
   )
