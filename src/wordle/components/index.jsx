@@ -39,11 +39,15 @@ const DisplayWord = ({ wordState, getCharClickHandler }) => {
   )
 }
 
-const WordsSuggestionList = ({ isVisible, onHide, wordList }) => {
+const WordsSuggestionList = ({ isVisible, onHide, wordList, onWordSelect }) => {
   console.debug('WordsSuggestionList rendered')
 
   const [filterQuery, setFilterQuery] = useState('')
   wordList = wordList.filter(word => word.includes(filterQuery.toLowerCase()))
+
+  const getWordClickHandler = (word) => () => {
+    onWordSelect(word)
+  };
 
   return (
     <Modal show={isVisible} onHide={onHide} scrollable>
@@ -52,7 +56,7 @@ const WordsSuggestionList = ({ isVisible, onHide, wordList }) => {
       </Modal.Header>
       <Modal.Body className="text-center" >
         <ListGroup variant="flush">
-          {wordList.map((word, si) => <ListGroup.Item key={si}>{word}</ListGroup.Item>)}
+          {wordList.map((word, si) => <ListGroup.Item onClick={getWordClickHandler(word.toLowerCase())} key={si}>{word.toLowerCase()}</ListGroup.Item>)}
         </ListGroup>
       </Modal.Body>
       <Modal.Footer>
@@ -116,7 +120,7 @@ const WordleContainer = () => {
       <Container className="shadow-sm p-5 mb-5" style={{ userSelect: 'none' }} onClick={() => EasterEgg.getClick()}>
         {
           eggTriggered ?
-            <h1>Made with ♥️ by Shaan</h1> :
+            <h1>Made with ♥️ by SliCeR</h1> :
             <h1>Wordle Solver</h1>
         }
       </Container>
@@ -162,6 +166,10 @@ const WordleContainer = () => {
           isVisible={showSuggestions}
           onHide={handleSuggestionListHide}
           wordList={wordleSolver.getSuggestions()}
+          onWordSelect={(word)=>{
+            addWord(word)
+            setShowSuggestions(false)
+          }}
         />}
       </Container>
     </Container>
