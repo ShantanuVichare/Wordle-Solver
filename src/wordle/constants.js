@@ -1,7 +1,7 @@
 
 export { default as WORDLE_LIST } from './wordleList.json'
 
-export const ALPHABETS = 'qwertyuiopasdfghjklzxcvbnm'.split('')
+export const ALPHABETS = new Set('qwertyuiopasdfghjklzxcvbnm')
 
 export const WORD_LENGTH = 5
 
@@ -9,20 +9,26 @@ export const WORD_LENGTH = 5
 export const CharState = {
     UNMATCHED: {
         name: 'UNMATCHED',
-        color: 'lightgrey',
-        borderColor: 'darkgrey',
+        bootstrapVariant: 'secondary',
+        // color: 'lightgrey',
+        // borderColor: 'darkgrey',
+        color: 'darkgrey',
         getNextState: () => CharState.EXISTS
     },
     EXISTS: {
         name: 'EXISTS',
-        color: 'LightGoldenRodYellow',
-        borderColor: 'GoldenRod',
+        bootstrapVariant: 'warning',
+        // color: 'LightGoldenRodYellow',
+        // borderColor: 'GoldenRod',
+        color: 'GoldenRod',
         getNextState: () => CharState.MATCHED
     },
     MATCHED: {
         name: 'MATCHED',
-        color: 'PaleGreen',
-        borderColor: 'green',
+        bootstrapVariant: 'success',
+        // color: 'PaleGreen',
+        // borderColor: 'green',
+        color: 'green',
         getNextState: () => CharState.UNMATCHED
     },
 }

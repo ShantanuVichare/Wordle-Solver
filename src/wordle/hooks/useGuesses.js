@@ -26,7 +26,7 @@ const useGuesses = () => {
             updatedCharState.state = updatedCharState.state.getNextState()
             setWordStates(updatedWordStates)
         },
-        resetWordStates: () => setWordStates([]),
+        resetWordStates: (endIdx=0) => setWordStates(wordStates.slice(0, endIdx)),
         wordStates,
     }
 }
