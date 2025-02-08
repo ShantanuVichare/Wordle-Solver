@@ -174,7 +174,7 @@ const WordleContainer = () => {
           size={wordStates.length > 0 && "lg"}
           onClick={() => setShowSuggestions(true)} 
         >
-          {`View ${wordleSolver.getSuggestions().length} suggestions`}
+          {`View ${wordStates.length > 0 ? wordleSolver.getSuggestions().length : 'all'} suggestions`}
         </Button>
         { showSuggestions && 
           <WordsSuggestionList

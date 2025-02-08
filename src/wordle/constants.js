@@ -8,27 +8,30 @@ export const WORD_LENGTH = 5
 
 export const CharState = {
     UNMATCHED: {
-        name: 'UNMATCHED',
+        key: 'UNMATCHED',
         bootstrapVariant: 'secondary',
         // color: 'lightgrey',
         // borderColor: 'darkgrey',
         color: 'darkgrey',
-        getNextState: () => CharState.EXISTS
+        nextStateKey: 'EXISTS',
+        isState: (state) => state.key === 'UNMATCHED',
     },
     EXISTS: {
-        name: 'EXISTS',
+        key: 'EXISTS',
         bootstrapVariant: 'warning',
         // color: 'LightGoldenRodYellow',
         // borderColor: 'GoldenRod',
         color: 'GoldenRod',
-        getNextState: () => CharState.MATCHED
+        nextStateKey: 'MATCHED',
+        isState: (state) => state.key === 'EXISTS',
     },
     MATCHED: {
-        name: 'MATCHED',
+        key: 'MATCHED',
         bootstrapVariant: 'success',
         // color: 'PaleGreen',
         // borderColor: 'green',
         color: 'green',
-        getNextState: () => CharState.UNMATCHED
+        nextStateKey: 'UNMATCHED',
+        isState: (state) => state.key === 'MATCHED',
     },
 }

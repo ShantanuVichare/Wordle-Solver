@@ -1,9 +1,16 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 import { CharState } from '../constants'
 
 const useGuesses = () => {
-    const [wordStates, setWordStates] = useState([])
+    const [wordStates, setWordStates] = useState(() => {
+        const savedWordStates = localStorage.getItem('wordStates')
+        return savedWordStates ? JSON.parse(savedWordStates) : []
+    })
+
+    useEffect(() => {
+        localStorage.setItem('wordStates', JSON.stringify(wordStates))
+    }, [wordStates])
 
     return {
         getWordState: (index) => wordStates[index],
@@ -23,7 +30,7 @@ const useGuesses = () => {
         updateCharState: (wordIndex, charIndex) => {
             const updatedWordStates = [...wordStates]
             const updatedCharState = updatedWordStates[wordIndex].chars[charIndex]
-            updatedCharState.state = updatedCharState.state.getNextState()
+            updatedCharState.state = CharState[updatedCharState.state.nextStateKey]
             setWordStates(updatedWordStates)
         },
         resetWordStates: (endIdx=0) => setWordStates(wordStates.slice(0, endIdx)),
