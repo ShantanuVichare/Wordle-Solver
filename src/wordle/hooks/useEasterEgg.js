@@ -2,17 +2,16 @@ import { useRef } from 'react'
 
 const useEasterEgg = (callback) => {
 
-    const counter = useRef(0)
-    const MAX_COUNT = 3
+    const progress = useRef(0)
 
     return {
         getClick: () => {
-            if (counter.current >= MAX_COUNT) {
+            console.debug('EasterEgg progress', progress.current)
+            if (progress.current >= 1.0) {
                 callback()
             } else {
-                console.log(counter.current)
-                counter.current += 1
-                setTimeout(() => counter.current -= 1, 1500)
+                progress.current += 1/3
+                setTimeout(() => progress.current -= 1/3, 1500)
             }
         },
     }

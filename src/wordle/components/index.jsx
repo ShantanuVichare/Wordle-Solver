@@ -2,10 +2,11 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Container, Button, Modal, Form, Row, Col, InputGroup, ListGroup } from "react-bootstrap";
 
 import { WORD_LENGTH, ALPHABETS } from '../constants';
-import { useWordleSolver, useGuesses, useEasterEgg } from '../hooks'
+import { useWordleSolver, useGuesses } from '../hooks'
 
 
 import 'bootstrap/dist/css/bootstrap.min.css';
+import EasterEgg from "./EasterEgg";
 
 
 const DisplayWord = ({ wordState, getCharClickHandler }) => {
@@ -95,12 +96,6 @@ const WordleContainer = () => {
   const { addWord, updateCharState, resetWordStates, wordStates } = useGuesses()
   const wordleSolver = useWordleSolver()
 
-  const [eggTriggered, setEggTriggered] = useState(false)
-  const EasterEgg = useEasterEgg(() => {
-    setEggTriggered(true)
-    setTimeout(() => setEggTriggered(false), 3000)
-  })
-
   const handleWordSubmit = useCallback((event) => {
     event.preventDefault();
     const word = currentWord
@@ -124,20 +119,16 @@ const WordleContainer = () => {
 
   return (
     <Container className="mb-5" style={{ maxWidth: '800px' }}>
-      <Container className="shadow-sm p-5 mb-4" style={{ userSelect: 'none' }} onClick={() => EasterEgg.getClick()}>
-        <h1 className="text-center mb-5">
-          {eggTriggered ? <s>Wordle Solver</s> : 'Wordle Solver'}
-        </h1>
-
-      <Row className="justify-content-center">
-      <Col>
-        <Button variant="outline-dark" href="https://www.nytimes.com/games/wordle/index.html" target="_blank">Play Today's Wordle</Button>
-        </Col>
+      <Container className="shadow-sm p-5 mb-4" >
+        <EasterEgg />
+        <Row className="justify-content-center">
         <Col>
-        <Button variant="outline-dark" href="https://wordlearchive.com/" target="_blank">Open Wordle Archive</Button>
-        </Col>
-      </Row>
-
+          <Button variant="outline-dark" href="https://www.nytimes.com/games/wordle/index.html" target="_blank">Play Today's Wordle</Button>
+          </Col>
+          <Col>
+          <Button variant="outline-dark" href="https://wordlearchive.com/" target="_blank">Open Wordle Archive</Button>
+          </Col>
+        </Row>
       </Container>
       <Container>
         <Row className="justify-content-center">
