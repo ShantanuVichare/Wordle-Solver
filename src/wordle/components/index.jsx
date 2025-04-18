@@ -1,12 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { use, useCallback, useEffect, useState } from "react";
 import { Container, Button, Modal, Form, Row, Col, InputGroup, ListGroup } from "react-bootstrap";
 
-import { WORD_LENGTH, ALPHABETS } from '../constants';
+import { WORD_LENGTH, ALPHABETS, LINK } from '../constants';
 import { useWordleSolver, useGuesses } from '../hooks'
 
+import EasterEgg from "./EasterEgg";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
-import EasterEgg from "./EasterEgg";
 
 
 const DisplayWord = ({ wordState, getCharClickHandler }) => {
@@ -62,10 +62,6 @@ const WordsSuggestionList = ({ isVisible, onHide, wordList, onWordSelect }) => {
     return lowerWord.includes(query);
   })
 
-  const getWordClickHandler = (word) => () => {
-    onWordSelect(word)
-  };
-
   return (
     <Modal show={isVisible} onHide={onHide} scrollable>
       <Modal.Header closeButton>
@@ -73,7 +69,7 @@ const WordsSuggestionList = ({ isVisible, onHide, wordList, onWordSelect }) => {
       </Modal.Header>
       <Modal.Body className="text-center bg-light" >
         <ListGroup variant="flush">
-          {wordList.map((word, si) => <Button variant="light" onClick={getWordClickHandler(word.toLowerCase())} key={si}>{word.toLowerCase()}</Button>)}
+          {wordList.map((word, si) => <Button variant="light" onClick={() => onWordSelect(word)} key={si}>{word}</Button>)}
         </ListGroup>
       </Modal.Body>
       <Modal.Footer>
@@ -90,6 +86,7 @@ const WordsSuggestionList = ({ isVisible, onHide, wordList, onWordSelect }) => {
 const WordleContainer = () => {
   console.debug('WordleContainer rendered')
 
+  const [userMessage, setUserMessage] = useState('Make your first guess on Wordle')
   const [currentWord, setCurrentWord] = useState('')
   const [showSuggestions, setShowSuggestions] = useState(false)
 
@@ -99,21 +96,35 @@ const WordleContainer = () => {
   const handleWordSubmit = useCallback((event) => {
     event.preventDefault();
     const word = currentWord
-    if (word.length === WORD_LENGTH) {
-      addWord(word.toLowerCase())
-      setCurrentWord('')
+    if (word.length < WORD_LENGTH) {
+      setUserMessage(`Word must be ${WORD_LENGTH} characters long`)
+      return
     }
+    if (!wordleSolver.getSuggestions().includes(word)) {
+      setUserMessage(`Word does not exist!`)
+      return
+    }
+    setUserMessage(`Word added!`)
+    addWord(word.toLowerCase())
+    setCurrentWord('')
   }, [currentWord])
 
   const handleWordInput = useCallback((event) => {
     event.preventDefault();
-    const word = event.target.value
+    const word = event.target.value.toLowerCase()
     if (word.length <= WORD_LENGTH && [...word].every(c => ALPHABETS.has(c))) {
       setCurrentWord(word)
     }
   }, [])
 
   useEffect(() => {
+    setTimeout(() => {
+      if (wordStates.length > 0) {
+        setUserMessage("Tap on character to change it's color")
+      } else {
+        setUserMessage("Enter your guess here")
+      }
+    }, 3000)
     wordleSolver.solveForStates(wordStates)
   }, [wordStates])
 
@@ -123,10 +134,10 @@ const WordleContainer = () => {
         <EasterEgg />
         <Row className="justify-content-center">
         <Col>
-          <Button variant="outline-dark" href="https://www.nytimes.com/games/wordle/index.html" target="_blank">Play Today's Wordle</Button>
+          <Button variant="outline-dark" href={LINK.WORDLE_TODAY} target="_blank">Play Today's Wordle</Button>
           </Col>
           <Col>
-          <Button variant="outline-dark" href="https://wordlearchive.com/" target="_blank">Open Wordle Archive</Button>
+          <Button variant="outline-dark" href={LINK.WORDLE_ARCHIVE} target="_blank">Check out Past Wordle</Button>
           </Col>
         </Row>
       </Container>
@@ -135,11 +146,7 @@ const WordleContainer = () => {
           <Col>
             <Container className="shadow-sm p-4 mb-4" style={{ minWidth: `350px`, }} >
               <p className="mt-2">
-                {
-                  wordStates.length > 0 ? 
-                    "Tap on character to change it's color" :
-                    "Go ahead make a guess"
-                }
+                {userMessage}
               </p>
               {
                 wordStates.map((wordState, wordIndex) => <DisplayWord
@@ -154,18 +161,25 @@ const WordleContainer = () => {
             <Container className="shadow-sm p-4 mb-4" style={{ minWidth: '350px' }}>
               <InputGroup className="mx-auto">
                 <Form className="my-1 mx-1" onSubmit={handleWordSubmit}>
-                  <Form.Control type="text" size="md" value={currentWord} onChange={handleWordInput} placeholder="Enter your Guess" />
+                  <Form.Control type="text" size="md" value={currentWord} onChange={handleWordInput} placeholder="Enter your Guess" autoFocus />
                 </Form>
-                <Button className="my-1 mx-1" variant="outline-danger" onClick={() => resetWordStates() && wordleSolver.reset()}>Reset</Button>
               </InputGroup>
                 {
                   wordStates.length > 0 &&
                   <InputGroup className="mt-3 mx-auto">
-                    <Button className="my-1 mx-1" variant="outline-primary" onClick={() => resetWordStates(-1)} >Undo Word</Button>
+                    <Button 
+                      className="my-1 mx-1" variant="outline-danger" 
+                      onClick={() => resetWordStates() && wordleSolver.reset()}>
+                      Reset All
+                    </Button>
+                    <Button 
+                      className="my-1 mx-1" variant="outline-primary" 
+                      onClick={() => resetWordStates(-1)} >
+                      Undo Word
+                    </Button>
                   </InputGroup>
                 }
             </Container>
-
           </Col>
         </Row>
         {/* <Button className="m-1" onClick={() => {
@@ -178,7 +192,9 @@ const WordleContainer = () => {
           size={wordStates.length > 0 && "lg"}
           onClick={() => setShowSuggestions(true)} 
         >
-          {`View ${wordStates.length > 0 ? wordleSolver.getSuggestions().length : 'all'} suggestions`}
+          {
+            `View ${wordleSolver.getSuggestions().length} Possible Words`
+          }
         </Button>
         { showSuggestions && 
           <WordsSuggestionList

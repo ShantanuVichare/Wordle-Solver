@@ -5,7 +5,7 @@ const useEasterEgg = (callback) => {
     const progress = useRef(0)
 
     return {
-        getClick: () => {
+        registerAction: () => {
             console.debug('EasterEgg progress', progress.current)
             if (progress.current >= 1.0) {
                 callback()

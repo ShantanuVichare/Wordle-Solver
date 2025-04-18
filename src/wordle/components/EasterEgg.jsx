@@ -8,20 +8,22 @@ const isDarkReaderActive = () => {
 
 const TextChar = ({ char, eggTriggered }) => {
     const [text, setText] = useState(char);
-    const [color, setColor] = useState('Black');
+    const [color, setColor] = useState('');
+    const [blockRender, setBlockRender] = useState(false);
     const intervalId = useRef(null);
 
     useEffect(() => {
         if (eggTriggered) {
+            setBlockRender(true);
             // create an interval to randomly generate colors from {black, GoldenRod, green}
             if (!intervalId.current) {
                 const id = setInterval(() => {
-                    const colors = ['Black', 'GoldenRod', 'Green'];
+                    const colors = ['', 'GoldenRod', 'Green'];
                     {
                         const randomColor = colors[Math.floor(Math.random() * colors.length)];
                         setColor(randomColor);
                     }
-                }, 250);
+                }, 500);
                 intervalId.current = id;
             }
             setText(char.toUpperCase());
@@ -34,15 +36,16 @@ const TextChar = ({ char, eggTriggered }) => {
                 setColor('Green');
                 // setText(<s>{char.toUpperCase()}</s>);
                 setTimeout(() => {
-                    setColor('Black');
+                    setBlockRender(false);
+                    setColor('');
                     setText(char);
-                }, 1500);
+                }, 2000);
             }
         }
     }, [eggTriggered]);
 
     return (
-        <span style={{ color: color }}>
+        <span style={{ backgroundColor: color,  minWidth: blockRender ? '1em' : '', margin: blockRender ? '0 2px' : '0', display: 'inline-block' }}>
             {char === ' ' ? '\u00A0' : text}
         </span>
     );
@@ -52,20 +55,30 @@ const TextChar = ({ char, eggTriggered }) => {
 const EasterEgg = () => {
 
     const [eggTriggered, setEggTriggered] = useState(false)
-    const EasterEgg = useEasterEgg(() => {
+    const { registerAction } = useEasterEgg(() => {
         setEggTriggered(true)
         setTimeout(() => setEggTriggered(false), 4000)
     })
 
     return (
-        <div style={{ userSelect: 'none' }} onClick={() => EasterEgg.getClick()}>
-            <h1 className="text-center mb-5">
-                {
-                    "Wordle Solver".split('').map((char, index) => (
-                        <TextChar key={index} char={char} eggTriggered={eggTriggered} />
-                    ))
-                }
-            </h1>
+        <div style={{ userSelect: 'none', marginBottom: '2rem' }} onClick={() => {
+            // registerAction()
+            if (!eggTriggered) {
+                setEggTriggered(true)
+                setTimeout(() => setEggTriggered(false), 4000)
+            }
+        }}>
+            {
+                ['Wordle', 'Solver'].map((headingWord, index) => (
+                    <h1 key={index} className="text-center" style={{ display: 'inline-block', margin: '0.1em 0.25em' }}>
+                        {
+                            headingWord.split('').map((char, index) => (
+                                <TextChar key={index} char={char} eggTriggered={eggTriggered} />
+                            ))
+                        }
+                    </h1>
+                ))
+            }
         </div>
     );
 };

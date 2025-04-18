@@ -1,10 +1,15 @@
 
-export { default as WORDLE_LIST } from './wordleList.json'
+import WORDLE_LIST_RAW from './wordleList.json'
+export const WORDLE_LIST = WORDLE_LIST_RAW.map((word) => word.toLowerCase())
 
 export const ALPHABETS = new Set('qwertyuiopasdfghjklzxcvbnm')
 
 export const WORD_LENGTH = 5
 
+export const LINK = {
+    WORDLE_TODAY: 'https://www.nytimes.com/games/wordle/index.html',
+    WORDLE_ARCHIVE: 'https://wordlearchive.com/',
+}
 
 export const CharState = {
     UNMATCHED: {
