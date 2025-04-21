@@ -1,6 +1,7 @@
 
 import WORDLE_LIST_RAW from './wordleList.json'
 export const WORDLE_LIST = WORDLE_LIST_RAW.map((word) => word.toLowerCase())
+export const WORDLE_WORDS_SET = new Set(WORDLE_LIST)
 
 export const ALPHABETS = new Set('qwertyuiopasdfghjklzxcvbnm')
 

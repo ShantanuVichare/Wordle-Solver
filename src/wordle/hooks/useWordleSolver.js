@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { CharState, WORDLE_LIST } from '../constants'
+import { CharState, WORDLE_LIST, WORDLE_WORDS_SET } from '../constants'
 
 const useWordleSolver = () => {
 
@@ -42,6 +42,9 @@ const useWordleSolver = () => {
                 ].every(condition => condition(s))
             })
             setSuggestions(searchSpace)
+        },
+        isPossibleWord: (word) => {
+            return WORDLE_WORDS_SET.has(word)
         },
         getSuggestions: () => suggestions,
         messify: () => {

@@ -100,7 +100,7 @@ const WordleContainer = () => {
       setUserMessage(`Word must be ${WORD_LENGTH} characters long`)
       return
     }
-    if (!wordleSolver.getSuggestions().includes(word)) {
+    if (!wordleSolver.isPossibleWord(word)) {
       setUserMessage(`Word does not exist!`)
       return
     }
