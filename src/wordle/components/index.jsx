@@ -159,14 +159,14 @@ const WordleContainer = () => {
           </Col>
           <Col>
             <Container className="shadow-sm p-4 mb-4" style={{ minWidth: '350px' }}>
-              <InputGroup className="mx-auto">
+              <InputGroup className="d-flex justify-content-center">
                 <Form className="my-1 mx-1" onSubmit={handleWordSubmit}>
                   <Form.Control type="text" size="md" value={currentWord} onChange={handleWordInput} placeholder="Enter your Guess" autoFocus />
                 </Form>
               </InputGroup>
                 {
                   wordStates.length > 0 &&
-                  <InputGroup className="mt-3 mx-auto">
+                  <InputGroup className="mt-3 d-flex justify-content-center">
                     <Button 
                       className="my-1 mx-1" variant="outline-danger" 
                       onClick={() => resetWordStates() && wordleSolver.reset()}>
