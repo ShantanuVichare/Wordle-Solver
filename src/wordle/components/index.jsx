@@ -2,7 +2,7 @@ import React, { use, useCallback, useEffect, useState } from "react";
 import { Container, Button, Modal, Form, Row, Col, InputGroup, ListGroup } from "react-bootstrap";
 
 import { WORD_LENGTH, ALPHABETS, LINK } from '../constants';
-import { useWordleSolver, useGuesses } from '../hooks'
+import { useWordleSolver, useGuesses, useCheatCode } from '../hooks'
 
 import EasterEgg from "./EasterEgg";
 
@@ -92,6 +92,7 @@ const WordleContainer = () => {
 
   const { addWord, updateCharState, resetWordStates, wordStates } = useGuesses()
   const wordleSolver = useWordleSolver()
+  const cheatCodeResolver = useCheatCode() // This implicitly logs the cheat code to the console
 
   const handleWordSubmit = useCallback((event) => {
     event.preventDefault();

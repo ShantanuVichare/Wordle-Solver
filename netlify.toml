@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/wordle-solution/:year/:month/:day"
+  to = "https://www.nytimes.com/svc/wordle/v2/:year-:month-:day.json"
+  status = 200
+  force = true
